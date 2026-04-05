@@ -87,7 +87,7 @@ p {
 .hero {
     position: relative;
     height: 100vh;
-    background-image: url("focusongod-logo.png");
+    background-image: url("aupaessentials.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -169,7 +169,7 @@ p {
 }
 
 .page-header::after {
-    content: "Premium Christian Brand";
+    content: "Premium Quality Essentials";
     display: inline-block;
     margin-top: 10px;
     font-size: 0.9rem;
