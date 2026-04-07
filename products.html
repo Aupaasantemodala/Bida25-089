@@ -162,120 +162,70 @@
 </footer>
 
 <script>
-function orderOnWhatsApp(productName, price, sizeId) {
-    var size = sizeId ? document.getElementById(sizeId).value : "";
-    var message = "Hello! I would like to order:\n\n" +
-                  "Product: " + productName + "\n" +
-                  "Price: " + price + (size ? "\nSize: " + size : "");
-    var phoneNumber = "26774176350";
-    var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
-    window.open(url, '_blank');
-}
-
-/* =========================
-   Carousel Slider Logic
-========================= */
 const track = document.querySelector('.carousel-track');
 const slides = Array.from(track.children);
 const nextBtn = document.querySelector('.carousel-btn.next');
 const prevBtn = document.querySelector('.carousel-btn.prev');
-const dotsContainer = document.querySelector('.carousel-dots');
 let currentIndex = 0;
-let autoSlideInterval;
+let slideWidth = track.offsetWidth;
 
-/* =========================
-   Generate dots dynamically
-========================= */
-slides.forEach((_, idx) => {
-    const dot = document.createElement('button');
-    dot.classList.add('dot');
-    if(idx === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => {
-        currentIndex = idx;
-        updateSlide();
-        updateDots();
-        resetAutoSlide();
-    });
-    dotsContainer.appendChild(dot);
-});
-
-const dots = Array.from(dotsContainer.children);
-
-/* =========================
-   Update slide position & dots
-========================= */
+// Function to update slide position
 function updateSlide() {
-    const slideWidth = track.offsetWidth;
+    slideWidth = track.offsetWidth; // recalc width on resize
     track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    updateDots();
 }
 
-function updateDots() {
-    dots.forEach(dot => dot.classList.remove('active'));
-    dots[currentIndex].classList.add('active');
-}
-
-/* =========================
-   Next / Prev Buttons
-========================= */
+// Next & Prev Buttons
 nextBtn.addEventListener('click', () => {
     currentIndex = (currentIndex + 1) % slides.length;
     updateSlide();
-    resetAutoSlide();
 });
 
 prevBtn.addEventListener('click', () => {
     currentIndex = (currentIndex - 1 + slides.length) % slides.length;
     updateSlide();
-    resetAutoSlide();
 });
 
-/* =========================
-   Auto Slide (3 seconds)
-========================= */
-function startAutoSlide() {
-    autoSlideInterval = setInterval(() => {
-        currentIndex = (currentIndex + 1) % slides.length;
-        updateSlide();
-    }, 3000);
-}
+// Auto-slide every 6 seconds
+setInterval(() => {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlide();
+}, 6000);
 
-function resetAutoSlide() {
-    clearInterval(autoSlideInterval);
-    startAutoSlide();
-}
-
-startAutoSlide();
-
-/* =========================
-   Swipe Support for Mobile
-========================= */
+// Swipe support for touch devices
 let startX = 0;
-let endX = 0;
+let isDragging = false;
 
 track.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
+    isDragging = true;
 });
 
 track.addEventListener('touchmove', (e) => {
-    endX = e.touches[0].clientX;
+    if(!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const diff = startX - currentX;
+
+    // Swipe threshold
+    if(diff > 50){
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateSlide();
+        isDragging = false;
+    } else if(diff < -50){
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        updateSlide();
+        isDragging = false;
+    }
 });
 
 track.addEventListener('touchend', () => {
-    let diff = startX - endX;
-    if (diff > 50) { // swipe left
-        currentIndex = (currentIndex + 1) % slides.length;
-    } else if (diff < -50) { // swipe right
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    }
-    updateSlide();
-    resetAutoSlide();
+    isDragging = false;
 });
 
-/* =========================
-   Resize Observer for Responsive
-========================= */
+// Recalculate slide width on window resize
 window.addEventListener('resize', updateSlide);
+
+// Initial update
 updateSlide();
 </script>
 
