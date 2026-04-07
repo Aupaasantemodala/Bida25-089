@@ -123,24 +123,26 @@
     </footer>
 
     <script>
+  const faqs = document.querySelectorAll(".faq-question");
 
-      const faqs = document.querySelectorAll(".faq-question");
+  faqs.forEach(button => {
+    const answer = button.nextElementSibling;
 
-      faqs.forEach(button => {
-        button.addEventListener("click", () => {
+    // Set initial height for smooth transition
+    answer.style.maxHeight = "0px";
+    answer.style.overflow = "hidden";
+    answer.style.transition = "max-height 0.4s ease, padding 0.4s ease";
 
-          const answer = button.nextElementSibling;
-
-          if(answer.style.display === "bllock"){
-            answer.style.display = "none";
-          } else {
-            answer.style.display = "block";
-          }
-
-        });
-      });
-
+    button.addEventListener("click", () => {
+      if (answer.style.maxHeight === "0px") {
+        answer.style.maxHeight = answer.scrollHeight + 20 + "px"; // 20px extra padding
+        answer.style.padding = "10px 15px";
+      } else {
+        answer.style.maxHeight = "0px";
+        answer.style.padding = "0 15px";
+      }
+    });
+  });
     </script>
-
   </body>
 </html>
