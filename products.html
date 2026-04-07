@@ -161,26 +161,25 @@
     &copy; 2026 AUPA'S WAVERS | DEEP FLOW ESSENTIALS
 </footer>
 
-<script>
-const track = document.querySelector('.carousel-track');
+   const track = document.querySelector('.carousel-track');
 const slides = Array.from(track.children);
 const nextBtn = document.querySelector('.carousel-btn.next');
 const prevBtn = document.querySelector('.carousel-btn.prev');
 let currentIndex = 0;
-let slideWidth = track.offsetWidth;
 
-// Function to update slide position
+// Update slide position
 function updateSlide() {
-    slideWidth = track.offsetWidth; // recalc width on resize
+    const slideWidth = track.clientWidth;
     track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
 }
 
-// Next & Prev Buttons
+// Next button
 nextBtn.addEventListener('click', () => {
     currentIndex = (currentIndex + 1) % slides.length;
     updateSlide();
 });
 
+// Previous button
 prevBtn.addEventListener('click', () => {
     currentIndex = (currentIndex - 1 + slides.length) % slides.length;
     updateSlide();
@@ -192,42 +191,11 @@ setInterval(() => {
     updateSlide();
 }, 6000);
 
-// Swipe support for touch devices
-let startX = 0;
-let isDragging = false;
-
-track.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-    isDragging = true;
-});
-
-track.addEventListener('touchmove', (e) => {
-    if(!isDragging) return;
-    const currentX = e.touches[0].clientX;
-    const diff = startX - currentX;
-
-    // Swipe threshold
-    if(diff > 50){
-        currentIndex = (currentIndex + 1) % slides.length;
-        updateSlide();
-        isDragging = false;
-    } else if(diff < -50){
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-        updateSlide();
-        isDragging = false;
-    }
-});
-
-track.addEventListener('touchend', () => {
-    isDragging = false;
-});
-
-// Recalculate slide width on window resize
+// Make carousel responsive
 window.addEventListener('resize', updateSlide);
 
-// Initial update
+// Initialize
 updateSlide();
-</script>
-
+   
 </body>
 </html>
