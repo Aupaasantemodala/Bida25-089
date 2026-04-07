@@ -5,6 +5,29 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>AUPA'S WAVERS | Products</title>
    <link rel="stylesheet" href="style.css">
+   <style>
+   /* Dots styling */
+   .carousel-dots {
+       text-align: center;
+       margin-top: 15px;
+   }
+
+   .carousel-dots .dot {
+       display: inline-block;
+       width: 12px;
+       height: 12px;
+       margin: 0 6px;
+       background-color: #ccc;
+       border-radius: 50%;
+       border: none;
+       cursor: pointer;
+       transition: background 0.3s;
+   }
+
+   .carousel-dots .dot.active {
+       background: #D4AF37; /* accent gold */
+   }
+   </style>
 </head> 
 <body>
 
@@ -51,7 +74,7 @@
                     <option value="M">Medium (M)</option>
                     <option value="H">Hard (H)</option>
                 </select>
-                <button class="buy-btn" onclick="orderOnWhatsApp('Short Wave Brush','P240.00','texture-wave brush')">Buy on WhatsApp</button>
+                <button class="buy-btn" onclick="orderOnWhatsApp('Short Wave Brush','P240.00','short-brush')">Buy on WhatsApp</button>
             </div>
 
             <!-- Slide 2 -->
@@ -65,7 +88,7 @@
                     <option value="M">Medium (M)</option>
                     <option value="H">Hard (H)</option>
                 </select>
-                <button class="buy-btn" onclick="orderOnWhatsApp('Long Wave Brush','P310.00','texture-wave brush')">Buy on WhatsApp</button>
+                <button class="buy-btn" onclick="orderOnWhatsApp('Long Wave Brush','P310.00','long-brush')">Buy on WhatsApp</button>
             </div>
 
             <!-- Slide 3 -->
@@ -81,7 +104,7 @@
                     <option value="B">Blue (B)</option>
                     <option value="W">White (W)</option>
                 </select>
-                <button class="buy-btn" onclick="orderOnWhatsApp('Durag','P120.00','color-durag')">Buy on WhatsApp</button>
+                <button class="buy-btn" onclick="orderOnWhatsApp('Durag','P120.00','durags')">Buy on WhatsApp</button>
             </div>
 
             <!-- Slide 4 -->
@@ -89,8 +112,7 @@
                 <img src="wave_controller.jpg" alt="Wave Controller">
                 <h3>WAVE CONTROLLER</h3>
                 <span class="price">P100.00</span>
-                <p>Style your waves with us..</p>
-   
+                <p>Style your waves with us.</p>
                 <button class="buy-btn" onclick="orderOnWhatsApp('Wave Controller','P100.00')">Buy on WhatsApp</button>
             </div>
 
@@ -100,7 +122,6 @@
                 <h3>WAVE SHAMPOO BAR</h3>
                 <span class="price">P24.00</span>
                 <p>Keep your hair clean.</p>
-                
                 <button class="buy-btn" onclick="orderOnWhatsApp('Wave Shampoo Bar','P24.00')">Buy on WhatsApp</button>
             </div>
 
@@ -110,7 +131,6 @@
                 <h3>MOISTURIZER COMBO</h3>
                 <span class="price">P250.00</span>
                 <p>Keep your waves healthy.</p>
-                
                 <button class="buy-btn" onclick="orderOnWhatsApp('Moisturizer combo','P250.00','moisturizer-combo')">Buy on WhatsApp</button>
             </div>
 
@@ -124,12 +144,13 @@
                     <option value="B">Black (B)</option>
                     <option value="W">White (W)</option>
                     <option value="B">Blue (B)</option>
-                    
                 </select>
-                <button class="buy-btn" onclick="orderOnWhatsApp('The Most High T-Shirt','P250.00','size-the-most-high')">Buy on WhatsApp</button>
+                <button class="buy-btn" onclick="orderOnWhatsApp('Wave Cap','P150.00','color-wave-cap')">Buy on WhatsApp</button>
             </div>
 
         </div>
+
+        <div class="carousel-dots"></div>
 
         <button class="carousel-btn next">&#10095;</button>
     </div>
@@ -142,37 +163,118 @@
 
 <script>
 function orderOnWhatsApp(productName, price, sizeId) {
-    var size = document.getElementById(sizeId).value;
+    var size = sizeId ? document.getElementById(sizeId).value : "";
     var message = "Hello! I would like to order:\n\n" +
                   "Product: " + productName + "\n" +
-                  "Price: " + price + "\n" +
-                  "Size: " + size;
+                  "Price: " + price + (size ? "\nSize: " + size : "");
     var phoneNumber = "26774176350";
     var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
     window.open(url, '_blank');
 }
 
+/* =========================
+   Carousel Slider Logic
+========================= */
 const track = document.querySelector('.carousel-track');
 const slides = Array.from(track.children);
 const nextBtn = document.querySelector('.carousel-btn.next');
 const prevBtn = document.querySelector('.carousel-btn.prev');
+const dotsContainer = document.querySelector('.carousel-dots');
 let currentIndex = 0;
+let autoSlideInterval;
 
+/* =========================
+   Generate dots dynamically
+========================= */
+slides.forEach((_, idx) => {
+    const dot = document.createElement('button');
+    dot.classList.add('dot');
+    if(idx === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+        currentIndex = idx;
+        updateSlide();
+        updateDots();
+        resetAutoSlide();
+    });
+    dotsContainer.appendChild(dot);
+});
+
+const dots = Array.from(dotsContainer.children);
+
+/* =========================
+   Update slide position & dots
+========================= */
 function updateSlide() {
     const slideWidth = track.offsetWidth;
     track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+    updateDots();
 }
 
+function updateDots() {
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[currentIndex].classList.add('active');
+}
+
+/* =========================
+   Next / Prev Buttons
+========================= */
 nextBtn.addEventListener('click', () => {
     currentIndex = (currentIndex + 1) % slides.length;
     updateSlide();
+    resetAutoSlide();
 });
 
 prevBtn.addEventListener('click', () => {
     currentIndex = (currentIndex - 1 + slides.length) % slides.length;
     updateSlide();
+    resetAutoSlide();
 });
 
+/* =========================
+   Auto Slide (3 seconds)
+========================= */
+function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateSlide();
+    }, 3000);
+}
+
+function resetAutoSlide() {
+    clearInterval(autoSlideInterval);
+    startAutoSlide();
+}
+
+startAutoSlide();
+
+/* =========================
+   Swipe Support for Mobile
+========================= */
+let startX = 0;
+let endX = 0;
+
+track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+});
+
+track.addEventListener('touchmove', (e) => {
+    endX = e.touches[0].clientX;
+});
+
+track.addEventListener('touchend', () => {
+    let diff = startX - endX;
+    if (diff > 50) { // swipe left
+        currentIndex = (currentIndex + 1) % slides.length;
+    } else if (diff < -50) { // swipe right
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    }
+    updateSlide();
+    resetAutoSlide();
+});
+
+/* =========================
+   Resize Observer for Responsive
+========================= */
 window.addEventListener('resize', updateSlide);
 updateSlide();
 </script>
