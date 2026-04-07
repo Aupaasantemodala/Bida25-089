@@ -184,29 +184,117 @@ p {
 }
 
 /* =========================
-   Founder Highlight
+   Mission / About
 ========================= */
+.mission {
+    background-color: var(--primary-white);
+    padding: 60px 20px;
+    text-align: center;
+}
+
+/* =========================
+   Founder Section
+========================= */
+.founder-section {
+    background-color: var(--primary-white);
+    padding: 60px 20px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
 .founder-section .highlight {
     color: var(--accent-gold);
 }
 
 /* =========================
-   Carousel / Products
+   Carousel / Products (FIXED)
 ========================= */
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    max-width: 500px;
+    margin: 40px auto;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+    min-width: 100%;
+    flex: 0 0 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.carousel-item img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.carousel-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.carousel-item p {
+    font-size: 1rem;
+}
+
 .carousel-item .price {
     background: var(--gold-gradient);
     color: var(--charcoal-black);
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .carousel-item .buy-btn {
     background: var(--gold-gradient);
     color: var(--charcoal-black);
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 .carousel-item .buy-btn:hover {
     background: var(--primary-green);
     color: var(--primary-white);
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-green);
+    color: var(--primary-white);
+    border: none;
+    font-size: 2rem;
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.carousel-btn:hover {
+    background: var(--charcoal-black);
+}
+
+.carousel-btn.prev {
+    left: 10px;
+}
+
+.carousel-btn.next {
+    right: 10px;
 }
 
 /* =========================
@@ -233,28 +321,12 @@ p {
 footer {
     background-color: var(--charcoal-black);
     color: var(--primary-white);
+    text-align: center;
+    padding: 25px;
 }
 
 footer a {
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-
-/* =========================
-   FAQ Accordion
-========================= */
-.accordion-button {
-    background-color: var(--light-gray);
-    color: var(--primary-green);
-}
-
-.accordion-button:not(.collapsed) {
-    background-color: var(--primary-green);
-    color: var(--primary-white);
-}
-
-.accordion-body {
-    background-color: var(--primary-white);
-    color: var(--charcoal-black);
-}
+   }
