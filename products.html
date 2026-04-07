@@ -168,35 +168,71 @@ const nextBtn = document.querySelector('.carousel-btn.next');
 const prevBtn = document.querySelector('.carousel-btn.prev');
 let currentIndex = 0;
 
-// Update slide position
-function updateSlide() {
-    const slideWidth = track.clientWidth;
-    track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+// Get the correct width of a single slide
+function getSlideWidth() {
+    return track.offsetWidth; // full container width
 }
 
-// Next button
+// Move to a specific slide
+function goToSlide(index) {
+    const slideWidth = getSlideWidth();
+    track.style.transform = `translateX(-${index * slideWidth}px)`;
+}
+
+// Next slide
 nextBtn.addEventListener('click', () => {
     currentIndex = (currentIndex + 1) % slides.length;
-    updateSlide();
+    goToSlide(currentIndex);
 });
 
-// Previous button
+// Previous slide
 prevBtn.addEventListener('click', () => {
     currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    updateSlide();
+    goToSlide(currentIndex);
 });
 
 // Auto-slide every 6 seconds
 setInterval(() => {
     currentIndex = (currentIndex + 1) % slides.length;
-    updateSlide();
+    goToSlide(currentIndex);
 }, 6000);
 
-// Make carousel responsive
-window.addEventListener('resize', updateSlide);
+// Swipe support
+let startX = 0;
+let isDragging = false;
+
+track.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+});
+
+track.addEventListener('touchmove', e => {
+    if(!isDragging) return;
+    const diffX = e.touches[0].clientX - startX;
+    // Optional: You can drag the slides visually here
+});
+
+track.addEventListener('touchend', e => {
+    isDragging = false;
+    const endX = e.changedTouches[0].clientX;
+    const diffX = endX - startX;
+    if(diffX > 50) {
+        // Swipe right → prev
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    } else if(diffX < -50) {
+        // Swipe left → next
+        currentIndex = (currentIndex + 1) % slides.length;
+    }
+    goToSlide(currentIndex);
+});
+
+// Adjust on window resize
+window.addEventListener('resize', () => {
+    goToSlide(currentIndex);
+});
 
 // Initialize
-updateSlide();
-   </script>
+goToSlide(currentIndex);
+    </script>
    
 </html>
