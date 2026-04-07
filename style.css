@@ -35,7 +35,7 @@ section {
 }
 
 h1, h2, h3 {
-    background: linear-gradient(90deg, var(--primary-green), var(--accent-gold));
+    background: var(--gold-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 15px;
@@ -67,13 +67,14 @@ p {
 }
 
 .nav-logo {
-    font-size: 1.6rem;
-    font-weight: bold;
-    background: var(--gold-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-decoration: none;
-    letter-spacing: 2px;
+    display: block;
+    width: 180px; /* adjust to your logo width */
+    height: 50px; /* adjust to your logo height */
+    background-image: url('logo.png'); /* your logo image path */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-indent: -9999px; /* hide text */
 }
 
 .nav-links a {
@@ -89,7 +90,71 @@ p {
 }
 
 /* =========================
-   Page Header
+   Hero Section
+========================= */
+.hero {
+    position: relative;
+    height: 100vh;
+    background-image: url("aupaessentials.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: center;
+    color: var(--primary-white);
+    padding-top: 10%;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.hero p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.hero-btn {
+    font-size: 1.2rem;
+    padding: 12px 35px;
+    background: var(--gold-gradient);
+    color: var(--charcoal-black);
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+
+.hero-btn:hover {
+    background: var(--primary-green);
+    color: var(--primary-white);
+    box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6);
+    transform: translateY(-3px);
+}
+
+/* =========================
+   Page Headers
 ========================= */
 .page-header {
     background-color: var(--primary-white);
@@ -215,57 +280,58 @@ p {
 .faq-section {
     background-color: var(--light-gray);
     padding: 50px 8%;
+    text-align: center;
 }
 
 .faq-section h1 {
-    color: var(--primary-green);
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .faq-section p {
     color: var(--charcoal-black);
-    text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .faq-container {
     max-width: 800px;
     margin: 0 auto;
+    text-align: left;
 }
 
 .faq {
-    margin-bottom: 15px;
-    border: 1px solid var(--primary-green);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: var(--primary-white);
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
 }
 
 .faq-question {
     width: 100%;
-    background-color: var(--primary-green);
+    background: var(--primary-green);
     color: var(--primary-white);
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 15px;
-    cursor: pointer;
     border: none;
+    padding: 15px;
     text-align: left;
-    transition: 0.3s ease;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: 0.3s;
 }
 
 .faq-question:hover {
-    background-color: var(--accent-gold);
+    background: var(--accent-gold);
     color: var(--charcoal-black);
 }
 
 .faq-answer {
     display: none;
-    padding: 15px;
-    background-color: var(--light-gray);
+    padding: 10px 15px;
+    background: var(--primary-white);
     color: var(--charcoal-black);
-    border-top: 1px solid var(--primary-green);
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
 /* =========================
@@ -282,4 +348,14 @@ footer a {
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-   }
+    text-decoration: none;
+}
+
+/* =========================
+   Buttons / Forms
+========================= */
+button, .hero-btn {
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
