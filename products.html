@@ -27,6 +27,19 @@
    .carousel-dots .dot.active {
        background: #D4AF37; /* accent gold */
    }
+
+   /* Smooth transition */
+   .carousel-track {
+       display: flex;
+       transition: transform 0.5s ease-in-out;
+   }
+
+   .carousel-item img {
+       max-width: 100%;
+       height: auto;
+       display: block;
+       margin: 0 auto;
+   }
    </style>
 </head> 
 <body>
@@ -59,7 +72,7 @@
 <!-- Products Slideshow -->
 <section class="products-section">
     <div class="carousel-container">
-        <button class="carousel-btn prev">&#10094;</button>
+        <button class="carousel-btn prev" aria-label="Previous Slide">&#10094;</button>
 
         <div class="carousel-track">
 
@@ -101,7 +114,7 @@
                     <option value="B">Black (B)</option>
                     <option value="S">Silver (S)</option>
                     <option value="M">Meroon (M)</option>
-                    <option value="B">Blue (B)</option>
+                    <option value="Bl">Blue (Bl)</option>
                     <option value="W">White (W)</option>
                 </select>
                 <button class="buy-btn" onclick="orderOnWhatsApp('Durag','P120.00','durags')">Buy on WhatsApp</button>
@@ -131,7 +144,7 @@
                 <h3>MOISTURIZER COMBO</h3>
                 <span class="price">P250.00</span>
                 <p>Keep your waves healthy.</p>
-                <button class="buy-btn" onclick="orderOnWhatsApp('Moisturizer combo','P250.00','moisturizer-combo')">Buy on WhatsApp</button>
+                <button class="buy-btn" onclick="orderOnWhatsApp('Moisturizer combo','P250.00')">Buy on WhatsApp</button>
             </div>
 
             <!-- Slide 7 -->
@@ -143,7 +156,7 @@
                 <select id="color-wave-cap" class="color-select">
                     <option value="B">Black (B)</option>
                     <option value="W">White (W)</option>
-                    <option value="B">Blue (B)</option>
+                    <option value="Bl">Blue (Bl)</option>
                 </select>
                 <button class="buy-btn" onclick="orderOnWhatsApp('Wave Cap','P150.00','color-wave-cap')">Buy on WhatsApp</button>
             </div>
@@ -152,7 +165,7 @@
 
         <div class="carousel-dots"></div>
 
-        <button class="carousel-btn next">&#10095;</button>
+        <button class="carousel-btn next" aria-label="Next Slide">&#10095;</button>
     </div>
 </section>
 
@@ -161,78 +174,52 @@
     &copy; 2026 AUPA'S WAVERS | DEEP FLOW ESSENTIALS
 </footer>
 
-   <script>
-   const track = document.querySelector('.carousel-track');
+<script>
+const track = document.querySelector('.carousel-track');
 const slides = Array.from(track.children);
 const nextBtn = document.querySelector('.carousel-btn.next');
 const prevBtn = document.querySelector('.carousel-btn.prev');
+const dotsContainer = document.querySelector('.carousel-dots');
 let currentIndex = 0;
 
-// Get the correct width of a single slide
+// WhatsApp order function
+function orderOnWhatsApp(productName, price, selectId) {
+    let option = "";
+    if(selectId) {
+        const selectElement = document.getElementById(selectId);
+        option = selectElement ? selectElement.value : "";
+    }
+    const message = `Hello, I would like to order:\n${productName} - ${price}${option ? `\nOption: ${option}` : ""}`;
+    const whatsappURL = `https://wa.me/267XXXXXXXXX?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, '_blank');
+}
+
+// Get width of a single slide
 function getSlideWidth() {
-    return track.offsetWidth; // full container width
+    return slides[0].offsetWidth;
 }
 
 // Move to a specific slide
 function goToSlide(index) {
     const slideWidth = getSlideWidth();
     track.style.transform = `translateX(-${index * slideWidth}px)`;
+    updateDots();
 }
 
-// Next slide
-nextBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % slides.length;
-    goToSlide(currentIndex);
+// Create dots
+slides.forEach((_, index) => {
+    const dot = document.createElement('button');
+    dot.classList.add('dot');
+    dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+    if(index === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+        currentIndex = index;
+        goToSlide(currentIndex);
+    });
+    dotsContainer.appendChild(dot);
 });
 
-// Previous slide
-prevBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    goToSlide(currentIndex);
-});
-
-// Auto-slide every 6 seconds
-setInterval(() => {
-    currentIndex = (currentIndex + 1) % slides.length;
-    goToSlide(currentIndex);
-}, 6000);
-
-// Swipe support
-let startX = 0;
-let isDragging = false;
-
-track.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-    isDragging = true;
-});
-
-track.addEventListener('touchmove', e => {
-    if(!isDragging) return;
-    const diffX = e.touches[0].clientX - startX;
-    // Optional: You can drag the slides visually here
-});
-
-track.addEventListener('touchend', e => {
-    isDragging = false;
-    const endX = e.changedTouches[0].clientX;
-    const diffX = endX - startX;
-    if(diffX > 50) {
-        // Swipe right → prev
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    } else if(diffX < -50) {
-        // Swipe left → next
-        currentIndex = (currentIndex + 1) % slides.length;
-    }
-    goToSlide(currentIndex);
-});
-
-// Adjust on window resize
-window.addEventListener('resize', () => {
-    goToSlide(currentIndex);
-});
-
-// Initialize
-goToSlide(currentIndex);
-    </script>
-   
-</html>
+function updateDots() {
+    const dots = Array.from(dotsContainer.children);
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === current)
